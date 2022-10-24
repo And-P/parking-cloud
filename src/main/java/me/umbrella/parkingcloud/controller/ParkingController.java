@@ -38,8 +38,8 @@ public class ParkingController {
     @GetMapping("/{id}")
     @ApiOperation("Busca um Parking pelo ID")
     public ResponseEntity<ParkingDTO> findById(@PathVariable String id) {
-        Parking parking = parkingService.findById(id);
-        ParkingDTO result = parkingMapper.toParkingDTO(parking);
+       Parking parking = parkingService.findById(id);
+       ParkingDTO result = parkingMapper.toParkingDTO(parking);
         return ResponseEntity.ok(result);
     }
 
@@ -50,5 +50,26 @@ public class ParkingController {
         Parking parking = parkingService.create(parkingConvert);
         ParkingDTO result = parkingMapper.toParkingDTO(parking);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("Deleta um Parking pelo ID")
+    public ResponseEntity delete(@PathVariable String id) {
+        parkingService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation("Atualiza um Parking")
+    public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO dto) {
+        Parking parkingUpdate = parkingMapper.toParkingCreate(dto);
+        Parking parking = parkingService.update(id, parkingUpdate);
+        ParkingDTO result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+    @PostMapping("/{id}")
+    public ResponseEntity<ParkingDTO> checkOut(@PathVariable String id) {
+        Parking parking = parkingService.checkOut(id);
+        return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
     }
 }
